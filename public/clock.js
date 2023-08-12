@@ -15,6 +15,7 @@ class Canvas {
     this.canvas.width = rect.width * this.dpi;
     this.canvas.height = rect.height * this.dpi;
     this.ctx.scale(this.scale, this.scale);
+    // console.log(this.canvas);
   }
   update(render) {
     this.frame++;
@@ -32,9 +33,10 @@ class Partical {
     this.y = y || 100;
     // Circle
     this.radius = radius || 4;
-    this.hue = randomBetween(0, 360);
+    this.hue = randomBetween(230, 260);
     this.saturation = 100;
     this.lightness = 90;
+    this.lightness = localStorage.getItem("brightnessPercentage") || 60;
     this.alpha = randomBetween(10, 100)/100;
     this.color = color || `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${this.alpha})`;
     // Velocity
@@ -48,6 +50,8 @@ class Partical {
     // Collision
     if (this.x <= this.radius || this.x + this.radius >= canvas.width / c.scale) this.xVel *= -1
     if (this.y <= this.radius || this.y + this.radius >= canvas.height / c.scale) this.yVel *= -1
+    // Brightness
+    this.lightness = localStorage.getItem("brightnessPercentage") || 60;
     // Circle
     ctx.beginPath();
     ctx.fillStyle = this.color;
@@ -70,7 +74,7 @@ class Clock {
     this.font = `${this.h}px 'Fira Code'`;
     this.hue = 0;
     this.saturation = 90;
-    this.lightness = 60;
+    this.lightness = localStorage.getItem("brightnessPercentage") || 60;
     this.alpha = .2;
     this.color = color || `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${this.alpha})`;
     // Possition
@@ -89,6 +93,8 @@ class Clock {
     const w = ctx.measureText(this.text).width;
     if (this.x <= 0 || this.x + w >= canvas.width / c.scale) this.xVel *= -1
     if (this.y <= this.h * .8 || this.y + 10 >= canvas.height / c.scale) this.yVel *= -1
+    // Brightness
+    this.lightness = localStorage.getItem("brightnessPercentage") || 60;
     // Text
     ctx.fillStyle = this.color;
     ctx.fillText(this.text, this.x, this.y);
@@ -136,7 +142,7 @@ function createParticals() {
 }
 function drawParticals(p) {
   for (let i = 0; i < p.length; i++) {
-    p[i].updateHue( randomBetween(0.1, 0.5) );
+    p[i].updateHue( randomBetween(-3, 3) );
     p[i].draw();
   }
 }
@@ -175,10 +181,10 @@ let ctx = c.ctx;
 
 // Canvas Render
 let t = new Clock();
-// let p = createParticals();
+let p = createParticals();
 c.update(() => { 
   drawClock(t); 
-  // drawParticals(p);
+  drawParticals(p);
 });
 
 // Hide Mouse
