@@ -7,5 +7,5 @@ npm run start
 # Build
 
 ```
-npm run package
+npm run publish
 ```
